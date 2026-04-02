@@ -1,6 +1,7 @@
 #include "raylib.h"
 
-void reboot(int *score_player, int *score_enemy,int *Max_score, int *pausado){
+void reboot(int *score_player, int *score_enemy,int *Max_score, int *pausado)
+{
     
     if(*Max_score == *score_player){
         *pausado = 1;

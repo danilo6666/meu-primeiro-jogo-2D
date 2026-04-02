@@ -1,12 +1,19 @@
 #include "raylib.h"
 #include "reboot.c"
+#include "Tela_inicial.c"
 
 
 int main() {
 	InitWindow(1000, 700, "Teste danilo");
 	SetTargetFPS(60);
+	SetExitKey(0);
+
+	Rectangle voltar ={20, 10, 150, 60};
 
 	Texture2D fundo = LoadTexture("fundo.png");
+	Texture2D inicial = LoadTexture("inicial.png");
+
+	Vector2 mouse = GetMousePosition();
 
 	float playery = 250;
 
@@ -23,7 +30,8 @@ int main() {
 
 	int Max_score = 10;
 
-	int pausado = 0;
+	int pausado = 1;
+	
 
 	while (!WindowShouldClose()) {
 
@@ -31,18 +39,20 @@ int main() {
 
 		if(pausado == 0){
 
+			
+			if (IsKeyPressed(KEY_ESCAPE)) { pausado = 1;}
+	
+
 			bally += ballspeedy;
 			ballx += ballspeedx;
 
 			if (ballx <= 10) {
 				enemy_score++;
-				ballx = 500;
-				bally = 350;	
+					
 			}
 			else if(ballx >= 990){
 				player_score++;
-				ballx = 500;
-				bally = 350;	
+					
 			}
 
 		
@@ -71,8 +81,8 @@ int main() {
 
 			}
 
-			if (ballx - 10 <= 70 && ballx > 50 && bally >= playery && bally <= playery + 100) { ballspeedx *= -1;ballx = 80;}
-			if(ballx + 10 <= 970 && ballx > 950 && bally >= enemyY && bally <= enemyY + 110) { ballspeedx *= -1;ballx = 940;}
+			if (ballx - 10 <= 30 && ballx > 10 && bally >= playery && bally <= playery + 100) { ballspeedx *= -1;ballx = 40;}
+			if(ballx + 10 <= 990 && ballx > 970 && bally >= enemyY && bally <= enemyY + 110) { ballspeedx *= -1;ballx = 970;}
 		}
 
 		
@@ -80,20 +90,31 @@ int main() {
 		BeginDrawing();
 		ClearBackground(BLACK);
 
-		DrawTextureEx(fundo,(Vector2){-25,0}, 0.0f, 0.69f, WHITE);
+		Tela_Inicial(&pausado,inicial);
 
-		reboot(&player_score, &enemy_score, &Max_score, &pausado);
+		if(pausado == 0){
+			DrawTextureEx(fundo,(Vector2){-34,0}, 0.0f, 0.70f, WHITE);
 
-		DrawText(TextFormat("%d/10",player_score),400,0,40,WHITE);
-		DrawText(TextFormat("%d/10", enemy_score), 600, 0, 40, WHITE);
+			reboot(&player_score, &enemy_score, &Max_score, &pausado);
+
+			DrawText(TextFormat("%d/10",player_score),300,0,40,WHITE);
+			DrawText(TextFormat("%d/10", enemy_score), 600, 0, 40, WHITE);
+
+			DrawText("< ESC",30, 25, 30, RED);
+
+			
 		
-		DrawCircle(ballx, bally, 10, WHITE);
+			DrawCircle(ballx, bally, 10, WHITE);
 
-		DrawRectangle(950, enemyY, 20, 100, WHITE);
-		DrawRectangle(50, playery, 20, 100, WHITE);
+			DrawRectangle(970, enemyY, 20, 100, WHITE);
+			DrawRectangle(10, playery, 20, 100, WHITE);
+
+		}
+			
+
+		
 
 		EndDrawing();
-
 	}
 	UnloadTexture(fundo);
 	CloseWindow();
